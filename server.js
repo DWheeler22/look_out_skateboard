@@ -18,20 +18,14 @@ fs.writeFileSync(reservFile, JSON.stringify(emptyReservationObj))
 app.post('/users/:userName', (req, res) => {
     let userName = req.params.userName
     let userStr = fs.readFileSync(userFile)
-    let userJSON = JSON.parse(userStr)
-    let newUserObj = {name:userName}
-    userJSON.users.push(newUserObj)
-    fs.writeFileSync(userFile, JSON.stringify(userJSON))
-
-    let reservStr = fs.readFileSync(reservFile)
-    let reservJSON = JSON.parse(reservStr)
-    reservJSON[userName] = []
-    fs.writeFileSync(reservFile, JSON.stringify(reservJSON))
-
+    let userData = JSON.parse(userStr)
+    let userObj = {name:userName, reservations:[]}
+    userData.users.push(userObj)
+    
+    fs.writeFileSync(userFile, JSON.stringify(userData))
     console.log(`User ${userName} has been created.`)
     res.send(`User ${userName} has been created.`)
     })
-
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}.`)
