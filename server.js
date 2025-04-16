@@ -10,7 +10,7 @@ const reservFile = 'reservations.json'
 
 // Instantiate JSON files
 let emptyUserObj = {"users":[]}
-let emptyReservationObj = {}
+let emptyReservationObj = {"reservations":[]}
 fs.writeFileSync(userFile, JSON.stringify(emptyUserObj))
 fs.writeFileSync(reservFile, JSON.stringify(emptyReservationObj))
 
@@ -23,20 +23,23 @@ app.post('/users/:userName', (req, res) => {
     userJSON.users.push(newUserObj)
     fs.writeFileSync(userFile, JSON.stringify(userJSON))
 
-    let reservStr = fs.readFileSync(reservFile)
-    let reservJSON = JSON.parse(reservStr)
-    reservJSON[userName] = []
-    fs.writeFileSync(reservFile, JSON.stringify(reservJSON))
-
     console.log(`User ${userName} has been created.`)
     res.send(`User ${userName} has been created.`)
     })
 
 // Create a reservation for a given user (specify name, start date, start time, and number of hours)
-app.post("/users/:userName/reservations", (req, res) => {
+app.post("/users/:userName/reservations/:hours", (req, res) => {
     let userName = req.params.userName
+    let reservHours = req.params.hours
     let reservObj = JSON.parse(fs.readFileSync(reservFile))
+    let newReservID = reservObj.reservations.length + 1
+    const now = new Date()
+    let newReserv = {name:userName, id:newReservID, startDate:now.getDate, startTime:now.getTime, hours:reservHours}
     
+    reservObj.reservations.push(newReserv)
+    fs.writeFileSync(reservFile, JSON.stringify(reservObj))
+    console.log(`Reservation with ID #${newReservID} has been created for ${userName}.`)
+    res.send(`Reservation with ID #${newReservID} has been created for ${userName}.`)
 })
 
 app.listen(port, () => {
