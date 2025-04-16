@@ -28,7 +28,7 @@ app.post('/users/:userName', (req, res) => {
     })
 
     
-// Retrieve Username from the system
+// Retrieve reservations from the system
 app.get('/users:userName', (req, res) => {
     let userName = req.params.userName
     res.send(`Here are the list of Users: ${username} `)
