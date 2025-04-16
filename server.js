@@ -27,6 +27,15 @@ app.post('/users/:userName', (req, res) => {
     res.send(`User ${userName} has been created.`)
     })
 
+    
+// Retrieve Username from the system
+app.get('/users:userName', (req, res) => {
+    let userName = req.params.userName
+    res.send(`Here are the list of Users: ${username} `)
+
+
+})
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}.`)
 })
