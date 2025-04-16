@@ -35,7 +35,7 @@ app.post("/users/:userName/reservations/:hours", (req, res) => {
     let reservObj = JSON.parse(fs.readFileSync(reservFile))
     let newReservID = reservObj.reservations.length + 1
     const now = new Date()
-    let newReserv = {name:userName, id:newReservID, startDate:now.getDate, startTime:now.getTime, hours:reservHours}
+    let newReserv = {name:userName, id:newReservID, startDate:now.toDateString(), startTime:now.toTimeString(), hours:reservHours}
     
     reservObj.reservations.push(newReserv)
     fs.writeFileSync(reservFile, JSON.stringify(reservObj))
