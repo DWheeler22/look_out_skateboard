@@ -32,6 +32,12 @@ app.post('/users/:userName', (req, res) => {
     res.send(`User ${userName} has been created.`)
     })
 
+// Create a reservation for a given user (specify name, start date, start time, and number of hours)
+app.post("/users/:userName/reservations", (req, res) => {
+    let userName = req.params.userName
+    let reservObj = JSON.parse(fs.readFileSync(reservFile))
+    
+})
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}.`)
