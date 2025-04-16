@@ -28,14 +28,6 @@ app.post('/users/:userName', (req, res) => {
     })
 
     
-// Retrieve reservations from the system
-app.get('/users:userName', (req, res) => {
-    let userName = req.params.userName
-    res.send(`Here are the list of Users: ${username} `)
-
-
-})
-    
 // Create a reservation for a given user (specify name, start date, start time, and number of hours)
 app.post("/users/:userName/reservations/:hours", (req, res) => {
     let userName = req.params.userName
@@ -49,6 +41,14 @@ app.post("/users/:userName/reservations/:hours", (req, res) => {
     fs.writeFileSync(reservFile, JSON.stringify(reservObj))
     console.log(`Reservation with ID #${newReservID} has been created for ${userName}.`)
     res.send(`Reservation with ID #${newReservID} has been created for ${userName}.`)
+})
+
+// Get Reseravtions from all users
+app.get('/reservations', (req, res) => {
+    let read_reservations_str = fs.readFileSync(reservFile)
+    let read_reservations = JSON.parse(read_reservations_str)
+    console.log(`Here are the list of Reservations:`, read_reservations)
+    res.send(`Here are the list of Reservations: \n${JSON.stringify(read_reservations)}`)
 })
 
 app.listen(port, () => {
