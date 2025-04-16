@@ -19,7 +19,7 @@ app.post('/users/:userName', (req, res) => {
     let userName = req.params.userName
     let userStr = fs.readFileSync(userFile)
     let userJSON = JSON.parse(userStr)
-    let newUserObj = {name:userName, reservations:[]}
+    let newUserObj = {name:userName}
     userJSON.users.push(newUserObj)
     fs.writeFileSync(userFile, JSON.stringify(userJSON))
 
