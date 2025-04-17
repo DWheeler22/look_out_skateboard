@@ -29,23 +29,22 @@ app.post('/users/:userName', (req, res) => {
     let userName = req.params.userName
     let userStr = fs.readFileSync(userFile)
     let userJSON = JSON.parse(userStr)
+    let responseMessage
 
     // Check if user is already in system
     if (checkUser(userName))
     {
-        let message = `Error: User ${userName} already exists.`
-        console.log(message)
-        res.send(message)
+        responseMessage = `Error: User ${userName} already exists.`
     }
     else
     {
         let newUserObj = {name:userName}
         userJSON.users.push(newUserObj)
         fs.writeFileSync(userFile, JSON.stringify(userJSON))
-
-        console.log(`User ${userName} has been created.`)
-        res.send(`User ${userName} has been created.`)
+        responseMessage = `User ${userName} has been created.`
     }
+    console.log(responseMessage)
+    res.send(responseMessage)
 })
 
     
@@ -57,12 +56,11 @@ app.post("/users/:userName/reservations/:startDate/:startTime/:hours", (req, res
     let reservHours = req.params.hours
     let reservObj = JSON.parse(fs.readFileSync(reservFile))
     
+    let responseMessage
     // Check if user exists
     if (!checkUser(userName))
     {
-        let message = `Error: User ${userName} does not exist.`
-        console.log(message)
-        res.send(message)
+        responseMessage = `Error: User ${userName} does not exist.`
     }
     else
     {
@@ -71,10 +69,10 @@ app.post("/users/:userName/reservations/:startDate/:startTime/:hours", (req, res
         
         reservObj.reservations.push(newReserv)
         fs.writeFileSync(reservFile, JSON.stringify(reservObj))
-        let message = `Reservation with ID #${newReservID} has been created for ${userName}.`
-        console.log(message)
-        res.send(message)
+        responseMessage = `Reservation with ID #${newReservID} has been created for ${userName}.`
     }
+    console.log(responseMessage)
+    res.send(responseMessage)
 })
 
 // Get Reservations from all users
@@ -93,37 +91,32 @@ app.put("/users/:userName/reservations/:reservationID/:startDate/:startTime/:hou
     let newStartTime = req.params.startTime
     let newHours = req.params.hours
 
-    {
-        let reservObj = JSON.parse(fs.readFileSync(reservFile))
-        reservObj.reservations.forEach(reservation => {
-            if (reservation.name === userName && reservation.id === reservID) 
-            {
-                reservation.startDate = newStartDate
-                reservation.startTime = newStartTime
-                reservation.hours = newHours
-                fs.writeFileSync(reservFile, JSON.stringify(reservObj))
-                let message = `Reservation #${reservation.id} has been successfully updated.`
-                console.log(message)
-                res.send(message)
-            }
-            else if (reservation.name != userName)
-            {
-                let message
-                if (!checkUser(userName)) {message = `Error: ${userName} does not exist.`}
-                else {message = `Error: ${userName} does not own this reservation.`}
-                console.log(message)
-                res.send(message)
-            }
-            else
-            {
-                let message = `Error: A reservation with ID #${reservID} could not be found.`
-                console.log(message)
-                res.send(message)
-            }
-        })
-    }
 
+    let reservObj = JSON.parse(fs.readFileSync(reservFile))
+    let responseMessage
+    reservObj.reservations.forEach(reservation => {
+        if (reservation.name === userName && reservation.id === reservID) 
+        {
+            reservation.startDate = newStartDate
+            reservation.startTime = newStartTime
+            reservation.hours = newHours
+            fs.writeFileSync(reservFile, JSON.stringify(reservObj))
+            responseMessage = `Reservation #${reservation.id} has been successfully updated.`
+        }
+        else if (reservation.name != userName)
+        {
+            if (!checkUser(userName)) {responseMessage = `Error: ${userName} does not exist.`}
+            else {responseMessage = `Error: ${userName} does not own this reservation.`}
+        }
+        else
+        {
+            responseMessage = `Error: A reservation with ID #${reservID} could not be found.`
+        }
+    })
+    console.log(responseMessage)
+    res.send(responseMessage)
 })
+
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}.`)
