@@ -34,14 +34,14 @@ app.post('/users/:userName', (req, res) => {
     // Check if user is already in system
     if (checkUser(userName))
     {
-        responseMessage = `Error: User ${userName} already exists.`
+        responseMessage = `Error: User '${userName}' already exists.`
     }
     else
     {
         let newUserObj = {name:userName}
         userJSON.users.push(newUserObj)
         fs.writeFileSync(userFile, JSON.stringify(userJSON))
-        responseMessage = `User ${userName} has been created.`
+        responseMessage = `User '${userName}' has been created.`
     }
     console.log(responseMessage)
     res.send(responseMessage)
@@ -60,7 +60,7 @@ app.post("/users/:userName/reservations/:startDate/:startTime/:hours", (req, res
     // Check if user exists
     if (!checkUser(userName))
     {
-        responseMessage = `Error: User ${userName} does not exist.`
+        responseMessage = `Error: User '${userName}' does not exist.`
     }
     else
     {
@@ -105,8 +105,8 @@ app.put("/users/:userName/reservations/:reservationID/:startDate/:startTime/:hou
         }
         else if (reservation.name != userName)
         {
-            if (!checkUser(userName)) {responseMessage = `Error: ${userName} does not exist.`}
-            else {responseMessage = `Error: ${userName} does not own this reservation.`}
+            if (!checkUser(userName)) {responseMessage = `Error: User '${userName}' does not exist.`}
+            else {responseMessage = `Error: User '${userName}' does not own this reservation.`}
         }
         else
         {
