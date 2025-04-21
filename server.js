@@ -14,6 +14,15 @@ let emptyReservationObj = {"reservations":[]}
 fs.writeFileSync(userFile, JSON.stringify(emptyUserObj))
 fs.writeFileSync(reservFile, JSON.stringify(emptyReservationObj))
 
+// Function to sort reservations
+function sortDate(a,b){
+    if (a.startDate < b.startDate){return -1}
+    if (a.startDate > b.startDate){return 1}
+    if (a.startTime < b.startTime){return -1}
+    if (a.startTime > b.startTime){return 1}
+    return 0
+}
+
 // Function to check if a user exists
 function checkUser(userName) {
     let exists = false
@@ -71,6 +80,14 @@ app.post("/users/:userName/reservations/:startDate/:startTime/:hours", (req, res
         let newReserv = {name:userName, id:newReservID, startDate:startDate, startTime:startTime, hours:reservHours}
         
         reservObj.reservations.push(newReserv)
+        // Sort reservations by date
+        reservObj.reservations.sort((a,b) =>{
+            if (a.startDate < b.startDate){return -1}
+            if (a.startDate > b.startDate){return 1}
+            if (a.startTime < b.startTime){return -1}
+            if (a.startTime > b.startTime){return 1}
+            return 0
+        })
         fs.writeFileSync(reservFile, JSON.stringify(reservObj))
         responseMessage = `Reservation with ID #${newReservID} has been created for ${userName}.`
     }
@@ -103,6 +120,14 @@ app.put("/users/:userName/reservations/:reservationID/:startDate/:startTime/:hou
             reservation.startDate = newStartDate
             reservation.startTime = newStartTime
             reservation.hours = newHours
+            // Sort reservations to restore chronology
+            reservObj.reservations.sort((a,b) =>{
+                if (a.startDate < b.startDate){return -1}
+                if (a.startDate > b.startDate){return 1}
+                if (a.startTime < b.startTime){return -1}
+                if (a.startTime > b.startTime){return 1}
+                return 0
+            })
             fs.writeFileSync(reservFile, JSON.stringify(reservObj))
             responseMessage = `Reservation #${reservation.id} has been successfully updated.`
         }
