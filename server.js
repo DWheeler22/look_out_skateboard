@@ -38,7 +38,7 @@ app.post('/users/:userName', (req, res) => {
     }
     else
     {
-        let newUserObj = {name:userName}
+        let newUserObj = {name:userName, reservations:[]}
         userJSON.users.push(newUserObj)
         fs.writeFileSync(userFile, JSON.stringify(userJSON))
         responseMessage = `User '${userName}' has been created.`
@@ -49,6 +49,9 @@ app.post('/users/:userName', (req, res) => {
 
     
 // Create a reservation for a given user (specify name, start date, start time, and number of hours)
+// DATE FORMAT: YYYY-MM-DD  (For sorting purposes, allows for alphabetical sort
+// TIME FORMAT: HH:MM (Military)
+// Implement sorting method
 app.post("/users/:userName/reservations/:startDate/:startTime/:hours", (req, res) => {
     let userName = req.params.userName
     let startDate = req.params.startDate
@@ -113,6 +116,35 @@ app.put("/users/:userName/reservations/:reservationID/:startDate/:startTime/:hou
             responseMessage = `Error: A reservation with ID #${reservID} could not be found.`
         }
     })
+    console.log(responseMessage)
+    res.send(responseMessage)
+})
+
+app.delete("/users/:userName/reservations/:reservationID", (req, res) => {
+    let userName = req.params.userName
+    let reservID = parseInt(req.params.reservationID)
+    let reservObj = JSON.parse(fs.readFileSync(reservFile))
+
+    let responseMessage
+    let found = false
+    reservObj.reservations.forEach((reservation, index) => {
+        if (reservation.id === reservID)
+        {
+            found = true
+            if (reservation.name != userName)
+            {
+                if (!checkUser(userName)) {responseMessage = `Error: User '${userName}' does not exist.`}
+                else {responseMessage = `Error: User '${userName}' does not own this reservation.`}
+            }
+            else
+            {
+                reservObj.reservations.splice(index, 1)
+                fs.writeFileSync(reservFile, JSON.stringify(reservObj))
+                responseMessage = `Reservation #${reservID} has been removed.`
+            }
+        }
+    })
+    if (!found) {responseMessage = `A reservation with ID #${reservID} could not be found.`}
     console.log(responseMessage)
     res.send(responseMessage)
 })
