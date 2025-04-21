@@ -14,15 +14,6 @@ let emptyReservationObj = {"reservations":[]}
 fs.writeFileSync(userFile, JSON.stringify(emptyUserObj))
 fs.writeFileSync(reservFile, JSON.stringify(emptyReservationObj))
 
-// Function to sort reservations
-function sortDate(a,b){
-    if (a.startDate < b.startDate){return -1}
-    if (a.startDate > b.startDate){return 1}
-    if (a.startTime < b.startTime){return -1}
-    if (a.startTime > b.startTime){return 1}
-    return 0
-}
-
 // Function to check if a user exists
 function checkUser(userName) {
     let exists = false
@@ -60,7 +51,6 @@ app.post('/users/:userName', (req, res) => {
 // Create a reservation for a given user (specify name, start date, start time, and number of hours)
 // DATE FORMAT: YYYY-MM-DD  (For sorting purposes, allows for alphabetical sort
 // TIME FORMAT: HH:MM (Military)
-// Implement sorting method
 app.post("/users/:userName/reservations/:startDate/:startTime/:hours", (req, res) => {
     let userName = req.params.userName
     let startDate = req.params.startDate
