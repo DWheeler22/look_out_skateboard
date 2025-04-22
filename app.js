@@ -79,8 +79,33 @@ function updateReservation() {
 
     // Reset fields
     document.getElementById("upd_res_user").value = ""
-    document.getElementById("upd_res_id").value= ""
+    document.getElementById("upd_res_id").value = ""
     document.getElementById("upd_res_date").value = ""
     document.getElementById("upd_res_time").value = ""
     document.getElementById("upd_res_hours").value = ""
+}
+
+function deleteReservation() {
+    let res_user = document.getElementById("del_res_user").value
+    let res_id = document.getElementById("del_res_id").value
+
+    const request = new XMLHttpRequest()
+    request.open("DELETE", `${base_server_url}/users/${res_user}/reservations/${res_id}}`)
+    request.onload = function() {
+        data = this.response
+        if (request.status === 200)
+        {
+            let response = document.getElementById("del_res_response")
+            response.innerHTML = data
+        }
+        else
+        {
+            console.log(`Error status: ${request.status}`)
+        }
+    }
+    request.send()
+
+    // Reset fields
+    document.getElementById("del_res_user").value = ""
+    document.getElementById("del_res_id").value = ""
 }
