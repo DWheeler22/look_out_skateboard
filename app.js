@@ -47,11 +47,40 @@ function createReservation() {
     }
     request.send()
 
-
-
     // Reset fields
     document.getElementById("new_res_user").value = ""
     document.getElementById("new_res_date").value = ""
     document.getElementById("new_res_time").value = ""
     document.getElementById("new_res_hours").value = ""
+}
+
+function updateReservation() {
+    let res_user = document.getElementById("upd_res_user").value
+    let res_id = document.getElementById("upd_res_id").value
+    let res_date = document.getElementById("upd_res_date").value
+    let res_time = document.getElementById("upd_res_time").value
+    let res_hours = document.getElementById("upd_res_hours").value
+
+    const request = new XMLHttpRequest()
+    request.open("PUT", `${base_server_url}/users/${res_user}/reservations/${res_id}/${res_date}/${res_time}/${res_hours}`)
+    request.onload = function() {
+        data = this.response
+        if (request.status === 200)
+        {
+            let response = document.getElementById("upd_res_response")
+            response.innerHTML = data
+        }
+        else 
+        {
+            console.log(`Error status: ${request.status}`)
+        }
+    }
+    request.send()
+
+    // Reset fields
+    document.getElementById("upd_res_user").value = ""
+    document.getElementById("upd_res_id").value= ""
+    document.getElementById("upd_res_date").value = ""
+    document.getElementById("upd_res_time").value = ""
+    document.getElementById("upd_res_hours").value = ""
 }
