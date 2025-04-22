@@ -5,7 +5,7 @@ function registerUser() {
     let userName = document.querySelector("#new_username").value
 
     const request = new XMLHttpRequest()
-    request.open("POST", `${base_server_url}/users/${userName}`)
+    request.open("POST", `${base_server_url}/users/${userName}`, true)
     request.onload = function() {
         data = this.response
         if (request.status === 200)
@@ -24,7 +24,30 @@ function registerUser() {
     document.getElementById("new_username").value = ""
 }
 
+// https://www.geeksforgeeks.org/how-to-validate-string-date-format-in-javascript/ (validating date)
 function createReservation() {
+    let res_user = document.getElementById("new_res_user").value
+    let res_date = document.getElementById("new_res_date").value
+    let res_time = document.getElementById("new_res_time").value
+    let res_hours = document.getElementById("new_res_hours").value
+
+    const request = new XMLHttpRequest()
+    request.open("POST", `${base_server_url}/users/${res_user}/reservations/${res_date}/${res_time}/${res_hours}`, true)
+    request.onload = function() {
+        data = this.response
+        if (request.status === 200)
+        {
+            let response = document.getElementById("make_res_response")
+            response.innerHTML = data
+        }
+        else
+        {
+            console.log(`Error status: ${request.status}`)
+        }
+    }
+    request.send()
+
+
 
     // Reset fields
     document.getElementById("new_res_user").value = ""
