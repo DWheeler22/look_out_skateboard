@@ -7,12 +7,28 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <div id="header">
-        <span>Look Out!</span><br>
-        <span>Skateboard Rentals</span>
+    <div class="header">
+        <div class="logo">
+            <span>Look Out!</span><br>
+            <span">Skateboard Rentals</span>
+        </div>
     </div>
 
-    <p>Test paragraph</p>
+    <div id="signup">
+        <p>Don't have a user account?</p>
+        <span class="entry"><label>Sign up: </label><input id="new_username"></span>
+        <button onclick="registerUser()">Enter</button>
+    </div><br>
+
+    <div id="make_res">
+        <p>Book a reservation:</p>
+        <span class="entry"><label>Username: </label><input id="new_res_user"><br></span>
+        <span class="entry"><label>Date (YYYY-MM-DD): </label><input id="new_res_date"><br></span>
+        <span class="entry"><label>Time (HH:MM): </label><input id="new_res_time"><br></span>
+        <span class="entry"><label>Hours Reserved: </label><input id="new_res_hours"><br></span>
+        <button onclick="createReservation()">Create Reservation</button>
+    </div>
     
+    <script src="app.js" defer></script>
 </body>
 </html>
