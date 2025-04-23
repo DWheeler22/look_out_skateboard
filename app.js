@@ -109,3 +109,24 @@ function deleteReservation() {
     document.getElementById("del_res_user").value = ""
     document.getElementById("del_res_id").value = ""
 }
+
+function getUserReservations() {
+    let userName = document.querySelector("#get_res_user").value
+
+
+    const request = new XMLHttpRequest
+    request.open("GET", `${base_server_url}/users/${userName}/reservations`, true)
+    request.onload = function() {
+        data = JSON.parse(this.response)
+        if (request.status === 200)
+        {
+            let response = document.getElementById("get_res_response")
+            response.innerHTML = data.reservations[1].startDate
+        }
+        else
+        {
+            console.log(`Error status: ${request.status}`)
+        }
+    }
+    request.send()
+}

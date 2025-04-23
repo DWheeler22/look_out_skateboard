@@ -96,35 +96,31 @@ app.post("/users/:userName/reservations/:startDate/:startTime/:hours", (req, res
 })
 
 // Retrieve the reservation info (if they have one) for a given user.
-app.get('/user/:userName/reservations', (req, res) => {
+app.get('/users/:userName/reservations', (req, res) => {
 
     let userName = req.params.userName
     let reservObj = JSON.parse(fs.readFileSync(reservFile))
-    let userResObj = []
+    let userResObj = {reservations:[]}
     
     reservObj.reservations.forEach(reservation => {
        
       if(userName === reservation.name)
       {
-        userResObj.push(reservation)
+        userResObj.reservations.push(reservation)
       }
       
         
     });
 
-    let string = JSON.stringify(userResObj)
-
-    console.log(`Here is ${userName}'s reservations: ${string}`, )
-    res.send(`Here is ${userName} reservation: ${string}`)
-
+    console.log(`${userName}'s reservations were sent to the client.`, )
+    res.send(userResObj)
 })
 
 // Get Reservations from all users
 app.get('/reservations', (req, res) => {
-    let read_reservations_str = fs.readFileSync(reservFile)
-    let read_reservations = JSON.parse(read_reservations_str)
-    console.log(`Here are the list of Reservations:`, read_reservations)
-    res.send(`Here are the list of Reservations: \n${JSON.stringify(read_reservations)}`)
+    let reservObj = fs.readFileSync(reservFile)
+    console.log(`All reservations were sent to the client.`)
+    res.send(reservObj)
 })
 
 // Update a Reservation
