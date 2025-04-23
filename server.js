@@ -57,6 +57,7 @@ app.post("/users/:userName/reservations/:startDate/:startTime/:hours", (req, res
     let startTime = req.params.startTime
     let reservHours = req.params.hours
     let reservObj = JSON.parse(fs.readFileSync(reservFile))
+    let userObj = JSON.parse(fs.readFileSync(userFile))
     
     let responseMessage
     // Check if user exists
@@ -70,6 +71,14 @@ app.post("/users/:userName/reservations/:startDate/:startTime/:hours", (req, res
         let newReserv = {name:userName, id:newReservID, startDate:startDate, startTime:startTime, hours:reservHours}
         
         reservObj.reservations.push(newReserv)
+        // Add reservation ID to user object
+        userObj.users.forEach(user => {
+            if (user.name === userName)
+            {
+                user.reservations.push(newReservID)
+            }
+        })
+    
         // Sort reservations by date
         reservObj.reservations.sort((a,b) =>{
             if (a.startDate < b.startDate){return -1}
@@ -79,6 +88,7 @@ app.post("/users/:userName/reservations/:startDate/:startTime/:hours", (req, res
             return 0
         })
         fs.writeFileSync(reservFile, JSON.stringify(reservObj))
+        fs.writeFileSync(userFile, JSON.stringify(userObj))
         responseMessage = `Reservation with ID #${newReservID} has been created for ${userName}.`
     }
     console.log(responseMessage)
@@ -155,7 +165,7 @@ app.delete("/users/:userName/reservations/:reservationID", (req, res) => {
             {
                 reservObj.reservations.splice(index, 1)
                 fs.writeFileSync(reservFile, JSON.stringify(reservObj))
-                responseMessage = `Reservation #${reservID} has been removed.`
+                responseMessage = `Reservation #${reservID} has been deleted.`
             }
         }
     })
