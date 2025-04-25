@@ -63,7 +63,8 @@
     <div id="get_reservations">
         <p class="section_header">Get Reservations</p>
         <div class="entry"><label>Username: </label><input id="get_res_user"></div>
-        <button id="get_res_button" class="submit_button" onclick="getUserReservations()">Get Reservation</button>
+        <button class="submit_button" onclick="getUserReservations()">Get User Reservations</button>
+        <button onclick="getAllReservations()">Get All Reservations</button>
         <div class="response">
             <table id="res_table"></table>
         </div>
