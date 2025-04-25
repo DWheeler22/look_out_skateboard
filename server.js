@@ -112,7 +112,8 @@ app.get('/users/:userName/reservations', (req, res) => {
         
     });
 
-    console.log(`${userName}'s reservations were sent to the client.`, )
+    if (userResObj.reservations.length === 0){console.log(`User '${userName}' does not exist.`)}
+    else {console.log(`${userName}'s reservations were sent to the client.`, )}
     res.send(userResObj)
 })
 
