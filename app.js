@@ -127,43 +127,54 @@ function getUserReservations() {
 
         if (request.status === 200)
         {
-            if (data.reservations.length === 0)
+
+            if (data.reservations === "no_reservations_error")
+            {
+                let error = document.createElement("p")
+                error.innerHTML = `Error: User '${userName}' does not have any reservations.`
+                error.id = "user_error"
+                document.getElementById("res_table").insertAdjacentElement('afterend', error)
+
+            }
+            else if (data.reservations.length === 0)
             {
                 let error = document.createElement("p")
                 error.innerHTML = `Error: User '${userName}' does not exist.`
                 error.id = "user_error"
                 document.getElementById("res_table").insertAdjacentElement('afterend', error)
-
             }
-            // https://www.w3schools.com/jsref/met_table_insertrow.asp (source for table operations)
-           // Header Row
-           let headerRow = table.insertRow()
-           let cell1 = headerRow.insertCell()
-           cell1.innerHTML = "Reservation ID #"
-           let cell2 = headerRow.insertCell()
-           cell2.innerHTML = "User"
-           let cell3 = headerRow.insertCell()
-           cell3.innerHTML = "Date"
-           let cell4 = headerRow.insertCell()
-           cell4.innerHTML = "Time"
-           let cell5 = headerRow.insertCell()
-           cell5.innerHTML = "Reserved Hours"
-           headerRow.style.backgroundColor = "white"
+            else
+            {
+                // https://www.w3schools.com/jsref/met_table_insertrow.asp (source for table operations)
+            // Header Row
+            let headerRow = table.insertRow()
+            let cell1 = headerRow.insertCell()
+            cell1.innerHTML = "Reservation ID #"
+            let cell2 = headerRow.insertCell()
+            cell2.innerHTML = "User"
+            let cell3 = headerRow.insertCell()
+            cell3.innerHTML = "Date"
+            let cell4 = headerRow.insertCell()
+            cell4.innerHTML = "Time"
+            let cell5 = headerRow.insertCell()
+            cell5.innerHTML = "Reserved Hours"
+            headerRow.style.backgroundColor = "white"
 
-           data.reservations.forEach(reservation => {
-                let row = table.insertRow()
-                let idCell = row.insertCell()
-                idCell.innerHTML = `${reservation.id}`
-                let nameCell = row.insertCell()
-                nameCell.innerHTML = `${reservation.name}`
-                let dateCell = row.insertCell()
-                dateCell.innerHTML = `${reservation.startDate}`
-                let timeCell = row.insertCell()
-                timeCell.innerHTML = `${reservation.startTime}`
-                let hoursCell = row.insertCell()
-                hoursCell.innerHTML = `${reservation.hours}`
-                row.style.backgroundColor = "white"
-           })
+            data.reservations.forEach(reservation => {
+                    let row = table.insertRow()
+                    let idCell = row.insertCell()
+                    idCell.innerHTML = `${reservation.id}`
+                    let nameCell = row.insertCell()
+                    nameCell.innerHTML = `${reservation.name}`
+                    let dateCell = row.insertCell()
+                    dateCell.innerHTML = `${reservation.startDate}`
+                    let timeCell = row.insertCell()
+                    timeCell.innerHTML = `${reservation.startTime}`
+                    let hoursCell = row.insertCell()
+                    hoursCell.innerHTML = `${reservation.hours}`
+                    row.style.backgroundColor = "white"
+            })
+            }
         }
         else
         {

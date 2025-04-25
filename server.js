@@ -100,21 +100,39 @@ app.get('/users/:userName/reservations', (req, res) => {
 
     let userName = req.params.userName
     let reservObj = JSON.parse(fs.readFileSync(reservFile))
-    let userResObj = {reservations:[]}
-    
-    reservObj.reservations.forEach(reservation => {
-       
-      if(userName === reservation.name)
-      {
-        userResObj.reservations.push(reservation)
-      }
-      
-        
-    });
+    let userObj = JSON.parse(fs.readFileSync(userFile))
+    // Get reservation ids for specific user
+    let res_ids = []
+    let found = false
+    userObj.users.forEach(user => {
+        if (user.name === userName)
+        {
+            found = true
+            res_ids = user.reservations
+        }
+    })
+    let resultsObj = {reservations:[]}
+    if (found)
+    {
+        reservObj.reservations.forEach(reservation => {
+            if(res_ids.includes(reservation.id))
+            {
+                resultsObj.reservations.push(reservation)
+            }
+        });
+    }
 
-    if (userResObj.reservations.length === 0){console.log(`User '${userName}' does not exist.`)}
-    else {console.log(`${userName}'s reservations were sent to the client.`, )}
-    res.send(userResObj)
+    if (!found){console.log(`User '${userName}' does not exist.`)}
+    else if (resultsObj.reservations.length === 0)
+    {
+        console.log(`User '${userName}' does not have any reservations.`)
+        resultsObj.reservations = "no_reservations_error"
+    }
+    else
+    {
+        console.log(`${userName}'s reservations were sent to the client.`)
+    }
+    res.send(resultsObj)
 })
 
 // Get Reservations from all users
